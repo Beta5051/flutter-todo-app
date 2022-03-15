@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'data/data_source/db.dart';
 import 'di/provider_setup.dart';
 import 'presentation/todos/todos_screen.dart';
 import 'ui/theme.dart';
@@ -7,10 +8,15 @@ import 'ui/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final providers = await getProviders();
+  final db = await initDB(
+    name: 'todo',
+    executes: [
+      'CREATE TABLE todo (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, timestamp INTEGER, isCheck INTEGER)',
+    ],
+  );
 
   runApp(MultiProvider(
-    providers: providers,
+    providers: getProviders(db),
     child: const TodoApp(),
   ));
 }
